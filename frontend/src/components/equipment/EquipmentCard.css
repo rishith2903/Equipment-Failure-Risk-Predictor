@@ -1,0 +1,69 @@
+.equipment-card {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.equipment-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--color-primary);
+}
+
+.equipment-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--spacing-md);
+}
+
+.equipment-name {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+    color: var(--color-text);
+}
+
+.equipment-type {
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.equipment-card-body {
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--color-border);
+    margin-bottom: var(--spacing-md);
+}
+
+.equipment-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-md);
+}
+
+.equipment-risk-score {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.risk-score-value {
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.equipment-card-footer {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.view-details-link {
+    color: var(--color-primary);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.equipment-card:hover .view-details-link {
+    transform: translateX(4px);
+}

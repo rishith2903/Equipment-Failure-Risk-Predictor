@@ -1,0 +1,15 @@
+.add-equipment-page {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.form-container {
+    max-width: 600px;
+}
+
+.form-actions {
+    display: flex;
+    gap: var(--spacing-md);
+    justify-content: flex-end;
+    margin-top: var(--spacing-xl);
+}
