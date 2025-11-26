@@ -69,7 +69,7 @@ Simple forms to register new machinery. Added some emoji indicators to make the 
 
 ### Sensor Logging
 Data entry point for field technicians.
-![Add Sensor Log](Add_Sensor_Log.png)
+![Add Sensor Log](Add_SensorLog.png)
 
 ---
 
