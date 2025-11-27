@@ -146,7 +146,6 @@ npm run dev
 
 ## Project Structure
 
-<<<<<<< HEAD
 ```
 equipment-predictor/
 ├── backend/               # Spring Boot 3 REST API
@@ -179,7 +178,9 @@ equipment-predictor/
 ├── docker-compose.yml
 └── README.md              # This file
 ```
-=======
+
+---
+
 ### Dashboard
 The main view gives a quick summary of fleet health. I focused on a high-contrast "dark mode" design to make alerts pop out.
 ![Dashboard](/docs/images/Dashboard.png)
@@ -335,58 +336,7 @@ This foundation is ready for:
 - ✅ Unit tests passing
 
 **To Test Authentication:**
-```bash
----
 
-## Project Structure
-
-```
-equipment-predictor/
-├── backend/               # Spring Boot 3 REST API
-│   ├── src/
-│   │   ├── main/
-│   │   │   ├── java/
-│   │   │   │   └── com/equipmentpredictor/
-│   │   │   │       ├── config/          # WebSocket, CORS
-│   │   │   │       ├── controller/      # REST endpoints
-│   │   │   │       ├── service/         # Business logic (Risk Engine)
-│   │   │   │       ├── repository/      # JPA repositories
-│   │   │   │       ├── model/           # JPA entities
-│   │   │   │       ├── dto/             # Request/Response objects
-│   │   │   │       └── security/        # JWT auth, filters
-│   │   │   └── resources/
-│   │   │       ├── db/migration/        # Flyway SQL scripts
-│   │   │       └── application.properties
-│   │   └── test/                        # JUnit 5 tests
-│   └── pom.xml
-├── frontend/              # React 18 + Vite
-│   ├── src/
-│   │   ├── pages/         # Smart containers (Dashboard, EquipmentDetail)
-│   │   ├── components/    # Presentational components
-│   │   ├── hooks/         # Custom hooks (useWebSocket, useDashboardData)
-│   │   ├── api/           # Axios API client
-│   │   └── lib/           # React Query setup
-│   └── package.json
-├── docs/
-│   └── images/            # Screenshots and documentation assets
-├── docker-compose.yml
-└── README.md              # This file
-``` 
----
-### Dashboard
-The main view gives a quick summary of fleet health. I focused on a high-contrast "dark mode" design to make alerts pop out.
-![Dashboard](/frontend/docs/images/Dashboard.png)
-
-### Equipment Management
-Simple forms to register new machinery. Added some emoji indicators to make the UI a bit more friendly and scanable.
-![Add Equipment](/frontend/docs/images/Add_Equipment.png)
-
-### Sensor Logging
-Data entry point for field technicians.
-![Add Sensor Log](/frontend/docs/images/Add_SensorLog.png)
-
-
----
 
 ## Key Features
 
