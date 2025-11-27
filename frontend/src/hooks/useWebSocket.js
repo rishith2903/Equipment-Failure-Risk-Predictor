@@ -18,7 +18,7 @@ export const useWebSocket = (topic) => {
     useEffect(() => {
         // Create WebSocket client with SockJS
         const client = new Client({
-            webSocketFactory: () => new SockJS('http://localhost:8080/ws'),
+            webSocketFactory: () => new SockJS('https://equipment-failure-risk-predictor.onrender.com/ws'),
             reconnectDelay: 5000,
             heartbeatIncoming: 4000,
             heartbeatOutgoing: 4000,
