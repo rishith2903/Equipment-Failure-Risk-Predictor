@@ -12,21 +12,20 @@ import java.util.Optional;
 
 @Repository
 public interface RiskEventRepository extends JpaRepository<RiskEvent, Long> {
-    
+
     Optional<RiskEvent> findFirstByEquipmentIdOrderByTimestampDesc(Long equipmentId);
-    
+
     List<RiskEvent> findByEquipmentIdOrderByTimestampDesc(Long equipmentId, Pageable pageable);
-    
+
     List<RiskEvent> findByRiskLevelOrderByTimestampDesc(RiskEvent.RiskLevel riskLevel, Pageable pageable);
-    
+
     @Query("SELECT r FROM RiskEvent r WHERE r.riskLevel IN :levels ORDER BY r.timestamp DESC")
     List<RiskEvent> findByRiskLevelInOrderByTimestampDesc(
-        @Param("levels") List<RiskEvent.RiskLevel> levels,
-        Pageable pageable
-    );
-    
-    @Query("SELECT COUNT(DISTINCT r.equipmentId) FROM RiskEvent r " +
-           "WHERE r.id IN (SELECT MAX(re.id) FROM RiskEvent re GROUP BY re.equipmentId) " +
-           "AND r.riskLevel = :level")
+            @Param("levels") List<RiskEvent.RiskLevel> levels,
+            Pageable pageable);
+
+    @Query(value = "SELECT COUNT(DISTINCT equipment_id) FROM risk_events r1 " +
+            "WHERE r1.risk_level = :#{#level.name()} " +
+            "AND r1.timestamp = (SELECT MAX(r2.timestamp) FROM risk_events r2 WHERE r2.equipment_id = r1.equipment_id)", nativeQuery = true)
     long countEquipmentByLatestRiskLevel(@Param("level") RiskEvent.RiskLevel level);
 }
