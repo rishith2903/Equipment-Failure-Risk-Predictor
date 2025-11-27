@@ -30,14 +30,13 @@ public class AlertService {
      */
     public List<AlertDTO> getAlerts(String level, Integer limit) {
         Pageable pageable = PageRequest.of(0, limit != null ? limit : 50);
-        
+
         List<RiskEvent> events;
         if (level == null || level.isEmpty()) {
             // Get MEDIUM, HIGH, and CRITICAL alerts
             events = riskEventRepository.findByRiskLevelInOrderByTimestampDesc(
-                List.of(RiskEvent.RiskLevel.MEDIUM, RiskEvent.RiskLevel.HIGH, RiskEvent.RiskLevel.CRITICAL),
-                pageable
-            );
+                    List.of(RiskEvent.RiskLevel.MEDIUM, RiskEvent.RiskLevel.HIGH, RiskEvent.RiskLevel.CRITICAL),
+                    pageable);
         } else {
             RiskEvent.RiskLevel riskLevel = RiskEvent.RiskLevel.valueOf(level.toUpperCase());
             events = riskEventRepository.findByRiskLevelOrderByTimestampDesc(riskLevel, pageable);
@@ -45,8 +44,8 @@ public class AlertService {
 
         // Get equipment info for all events
         Map<Long, Equipment> equipmentMap = equipmentRepository.findAllById(
-            events.stream().map(RiskEvent::getEquipmentId).distinct().collect(Collectors.toList())
-        ).stream().collect(Collectors.toMap(Equipment::getId, e -> e));
+                events.stream().map(RiskEvent::getEquipmentId).distinct().collect(Collectors.toList())).stream()
+                .collect(Collectors.toMap(Equipment::getId, e -> e));
 
         return events.stream()
                 .map(event -> {
@@ -111,18 +110,40 @@ public class AlertService {
      * Get dashboard statistics
      */
     public Map<String, Object> getDashboardStats() {
-        long totalEquipment = equipmentRepository.count();
-        long criticalCount = riskEventRepository.countEquipmentByLatestRiskLevel(RiskEvent.RiskLevel.CRITICAL);
-        long highCount = riskEventRepository.countEquipmentByLatestRiskLevel(RiskEvent.RiskLevel.HIGH);
-        long mediumCount = riskEventRepository.countEquipmentByLatestRiskLevel(RiskEvent.RiskLevel.MEDIUM);
-        long lowCount = riskEventRepository.countEquipmentByLatestRiskLevel(RiskEvent.RiskLevel.LOW);
+        List<Equipment> allEquipment = equipmentRepository.findAll();
+        long totalEquipment = allEquipment.size();
+
+        // Count equipment by their latest risk level
+        long criticalCount = 0;
+        long highCount = 0;
+        long mediumCount = 0;
+        long lowCount = 0;
+
+        for (Equipment equipment : allEquipment) {
+            // Get latest risk event for this equipment
+            riskEventRepository.findFirstByEquipmentIdOrderByTimestampDesc(equipment.getId())
+                    .ifPresent(latestRisk -> {
+                        // This won't work directly, need to handle outside lambda
+                    });
+        }
+
+        // Better approach: collect all latest risks first
+        Map<RiskEvent.RiskLevel, Long> riskCounts = allEquipment.stream()
+                .map(equipment -> riskEventRepository.findFirstByEquipmentIdOrderByTimestampDesc(equipment.getId()))
+                .filter(optional -> optional.isPresent())
+                .map(optional -> optional.get().getRiskLevel())
+                .collect(Collectors.groupingBy(level -> level, Collectors.counting()));
+
+        criticalCount = riskCounts.getOrDefault(RiskEvent.RiskLevel.CRITICAL, 0L);
+        highCount = riskCounts.getOrDefault(RiskEvent.RiskLevel.HIGH, 0L);
+        mediumCount = riskCounts.getOrDefault(RiskEvent.RiskLevel.MEDIUM, 0L);
+        lowCount = riskCounts.getOrDefault(RiskEvent.RiskLevel.LOW, 0L);
 
         return Map.of(
-            "totalEquipment", totalEquipment,
-            "criticalEquipment", criticalCount,
-            "highRiskEquipment", highCount,
-            "mediumRiskEquipment", mediumCount,
-            "lowRiskEquipment", lowCount
-        );
+                "totalEquipment", totalEquipment,
+                "criticalEquipment", criticalCount,
+                "highRiskEquipment", highCount,
+                "mediumRiskEquipment", mediumCount,
+                "lowRiskEquipment", lowCount);
     }
 }
