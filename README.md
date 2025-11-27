@@ -182,16 +182,16 @@ equipment-predictor/
 =======
 ### Dashboard
 The main view gives a quick summary of fleet health. I focused on a high-contrast "dark mode" design to make alerts pop out.
-![Dashboard](Dashboard.png)
+![Dashboard](/frontend/docs/images/Dashboard.png)
 
 ### Equipment Management
 Simple forms to register new machinery. Added some emoji indicators to make the UI a bit more friendly and scanable.
-![Add Equipment](Add_Equipment.png)
+![Add Equipment](/frontend/docs/images/Add_Equipment.png)
 
 ### Sensor Logging
 Data entry point for field technicians.
-![Add Sensor Log](Add_SensorLog.png)
->>>>>>> fb2122eb7f64e054105b7b64eb70b9626b94c394
+![Add Sensor Log](/frontend/docs/images/Add_SensorLog.png)
+
 
 ---
 
@@ -244,21 +244,6 @@ Data entry point for field technicians.
 
 ---
 
-## Screenshots
-
-### Dashboard - Real-Time Monitoring
-![Dashboard](docs/images/Dashboard.png)
-*Live equipment status with WebSocket alerts. Dark theme optimized for industrial environments.*
-
-### Equipment Detail - Sensor Trends
-![Equipment Detail](docs/images/Equipment.png)
-*Historical sensor data visualized with Recharts. Identify patterns before failure.*
-
-### Add Sensor Log - Smart Validation
-![Add Sensor Log](docs/images/Add_SenorLog.png)
-*React Hook Form validation with real-time error feedback.*
-
----
 
 ## Why This Project Stands Out
 
