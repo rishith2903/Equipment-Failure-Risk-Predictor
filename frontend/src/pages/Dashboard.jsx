@@ -93,7 +93,7 @@ const Dashboard = () => {
             </div>
 
             {/* Statistics */}
-            <div className="dashboard-stats grid grid-cols-5 mb-xl">
+            <div className="dashboard-stats mb-xl" style={{ display: 'flex', gap: 'var(--spacing-lg)', flexWrap: 'wrap' }}>
                 <StatsCard
                     label="Total Equipment"
                     value={stats?.totalEquipment || 0}
