@@ -340,7 +340,7 @@ This foundation is ready for:
 
 ## Project Structure
 
-```
+``
 equipment-predictor/
 ├── backend/               # Spring Boot 3 REST API
 │   ├── src/
@@ -371,7 +371,7 @@ equipment-predictor/
 │   └── images/            # Screenshots and documentation assets
 ├── docker-compose.yml
 └── README.md              # This file
-```
+``
 ### Dashboard
 The main view gives a quick summary of fleet health. I focused on a high-contrast "dark mode" design to make alerts pop out.
 ![Dashboard](/frontend/docs/images/Dashboard.png)
