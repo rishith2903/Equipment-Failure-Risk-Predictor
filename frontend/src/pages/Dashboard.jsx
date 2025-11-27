@@ -93,7 +93,7 @@ const Dashboard = () => {
             </div>
 
             {/* Statistics */}
-            <div className="dashboard-stats grid grid-cols-4 mb-xl">
+            <div className="dashboard-stats grid grid-cols-5 mb-xl">
                 <StatsCard
                     label="Total Equipment"
                     value={stats?.totalEquipment || 0}
@@ -111,6 +111,12 @@ const Dashboard = () => {
                     value={stats?.highRiskEquipment || 0}
                     icon="⚠️"
                     variant="high"
+                />
+                <StatsCard
+                    label="Medium Risk"
+                    value={stats?.mediumRiskEquipment || 0}
+                    icon="🟡"
+                    variant="medium"
                 />
                 <StatsCard
                     label="Healthy"
