@@ -9,12 +9,6 @@ const Header = () => {
                     <h1 className="header-title">⚙️ Equipment Risk Predictor</h1>
                     <p className="header-subtitle">AI-Powered Health Monitoring</p>
                 </div>
-                <div className="header-right">
-                    <div className="system-status">
-                        <span className="status-dot"></span>
-                        <span className="status-text">System Active</span>
-                    </div>
-                </div>
             </div>
         </header>
     );
