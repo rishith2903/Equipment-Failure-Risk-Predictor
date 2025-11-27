@@ -1,5 +1,7 @@
 .stats-card {
     transition: all 0.2s ease;
+    min-width: 180px;
+    flex: 1;
 }
 
 .stats-card:hover {
@@ -50,6 +52,11 @@
 .stats-card.high .stats-icon {
     background: rgba(249, 115, 22, 0.2);
     color: var(--color-high);
+}
+
+.stats-card.medium .stats-icon {
+    background: rgba(250, 204, 21, 0.2);
+    color: var(--color-medium);
 }
 
 .stats-card.low .stats-icon {
