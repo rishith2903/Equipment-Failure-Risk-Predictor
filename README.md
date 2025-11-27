@@ -235,7 +235,6 @@ Data entry point for field technicians.
 - `POST /api/equipment/{id}/logs` - Submit sensor reading (triggers risk calculation)
 - `GET /api/equipment/{id}/logs` - Get historical logs
 
-<<<<<<< HEAD
 **Risk Monitoring**
 - `GET /api/risk/stats` - Dashboard statistics
 - `GET /api/risk/alerts` - Recent high-risk events
@@ -366,8 +365,3 @@ MIT License - Feel free to use this as a reference for your own projects.
 ---
 
 **Thank you for reviewing my work. I look forward to discussing the technical decisions I made and how they align with your team's engineering standards.**
-=======
-#   E q u i p m e n t - F a i l u r e - R i s k - P r e d i c t o r 
- 
- 
->>>>>>> fb2122eb7f64e054105b7b64eb70b9626b94c394
