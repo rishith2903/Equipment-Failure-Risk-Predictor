@@ -182,15 +182,15 @@ equipment-predictor/
 =======
 ### Dashboard
 The main view gives a quick summary of fleet health. I focused on a high-contrast "dark mode" design to make alerts pop out.
-![Dashboard](/frontend/docs/images/Dashboard.png)
+![Dashboard](/docs/images/Dashboard.png)
 
 ### Equipment Management
 Simple forms to register new machinery. Added some emoji indicators to make the UI a bit more friendly and scanable.
-![Add Equipment](/frontend/docs/images/Add_Equipment.png)
+![Add Equipment](/docs/images/Add_Equipment.png)
 
 ### Sensor Logging
 Data entry point for field technicians.
-![Add Sensor Log](/frontend/docs/images/Add_SensorLog.png)
+![Add Sensor Log](/docs/images/Add_SensorLog.png)
 
 
 ---
