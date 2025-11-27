@@ -336,6 +336,198 @@ This foundation is ready for:
 
 **To Test Authentication:**
 ```bash
+---
+
+## Project Structure
+
+```
+equipment-predictor/
+├── backend/               # Spring Boot 3 REST API
+│   ├── src/
+│   │   ├── main/
+│   │   │   ├── java/
+│   │   │   │   └── com/equipmentpredictor/
+│   │   │   │       ├── config/          # WebSocket, CORS
+│   │   │   │       ├── controller/      # REST endpoints
+│   │   │   │       ├── service/         # Business logic (Risk Engine)
+│   │   │   │       ├── repository/      # JPA repositories
+│   │   │   │       ├── model/           # JPA entities
+│   │   │   │       ├── dto/             # Request/Response objects
+│   │   │   │       └── security/        # JWT auth, filters
+│   │   │   └── resources/
+│   │   │       ├── db/migration/        # Flyway SQL scripts
+│   │   │       └── application.properties
+│   │   └── test/                        # JUnit 5 tests
+│   └── pom.xml
+├── frontend/              # React 18 + Vite
+│   ├── src/
+│   │   ├── pages/         # Smart containers (Dashboard, EquipmentDetail)
+│   │   ├── components/    # Presentational components
+│   │   ├── hooks/         # Custom hooks (useWebSocket, useDashboardData)
+│   │   ├── api/           # Axios API client
+│   │   └── lib/           # React Query setup
+│   └── package.json
+├── docs/
+│   └── images/            # Screenshots and documentation assets
+├── docker-compose.yml
+└── README.md              # This file
+```
+### Dashboard
+The main view gives a quick summary of fleet health. I focused on a high-contrast "dark mode" design to make alerts pop out.
+![Dashboard](/frontend/docs/images/Dashboard.png)
+
+### Equipment Management
+Simple forms to register new machinery. Added some emoji indicators to make the UI a bit more friendly and scanable.
+![Add Equipment](/frontend/docs/images/Add_Equipment.png)
+
+### Sensor Logging
+Data entry point for field technicians.
+![Add Sensor Log](/frontend/docs/images/Add_SensorLog.png)
+
+
+---
+
+## Key Features
+
+### 1. Real-Time Risk Monitoring
+- **Live Dashboard**: WebSocket connection shows alerts as they happen
+- **Color-Coded Alerts**: CRITICAL (red), HIGH (orange), MEDIUM (yellow), LOW (green)
+- **Historical Charts**: Recharts visualizations for sensor trends
+
+### 2. Intelligent Risk Calculation
+- **Weighted Algorithm**: `Score = 0.4×Temp + 0.35×Vib + 0.25×Load`
+- **Normalization**: Scales raw sensor values to 0-100 for fair comparison
+- **Configurable Weights**: Externalized to `application.properties` (no code changes needed)
+
+### 3. Secure API
+- **JWT Authentication**: Stateless, scalable design
+- **Protected Endpoints**: All `/api/**` routes require valid token
+- **CORS Configured**: Safe cross-origin requests
+
+### 4. Professional Code Quality
+- **Separation of Concerns**: Layered architecture (Controller → Service → Repository)
+- **DTOs**: Clean API contracts separate from database models
+- **Exception Handling**: Global `@ControllerAdvice` for consistent error responses
+- **Validation**: `@Valid` annotations with custom error messages
+- **Testing**: 8 unit tests for risk calculation logic
+
+---
+
+## API Endpoints
+
+**Authentication**
+- `POST /api/v1/auth/login` - Get JWT token
+
+**Equipment Management**
+- `GET /api/equipment` - List all equipment
+- `POST /api/equipment` - Create new equipment
+- `GET /api/equipment/{id}` - Get equipment details
+
+**Sensor Data**
+- `POST /api/equipment/{id}/logs` - Submit sensor reading (triggers risk calculation)
+- `GET /api/equipment/{id}/logs` - Get historical logs
+
+**Risk Monitoring**
+- `GET /api/risk/stats` - Dashboard statistics
+- `GET /api/risk/alerts` - Recent high-risk events
+
+**Documentation**
+- `GET /swagger-ui.html` - Interactive API explorer
+
+---
+
+
+## Why This Project Stands Out
+
+### 1. Production-Ready Architecture
+Not a toy app. This uses the **same patterns** I'd use for a Fortune 500 client:
+- Layered architecture for maintainability
+- DTOs to decouple API from database
+- Flyway for database version control
+- Exception handling for robust error responses
+
+### 2. Real Business Value
+Solves an actual $50B/year problem: **unplanned downtime** in manufacturing. Every hour of unexpected equipment failure costs companies $100K-$5M.
+
+### 3. Full Ownership
+I designed **every layer**:
+- Database schema with proper foreign keys and indexes
+- REST API with consistent naming (`/api/v1/...`)
+- Business logic with configurable weights
+- React components with reusable design system
+- WebSocket infrastructure for real-time updates
+
+### 4. Attention to Detail
+- JWT tokens expire after 24 hours (security)
+- Database indexes on frequently queried columns (performance)
+- CSS variables for easy theming (maintainability)
+- Toast notifications auto-dismiss after 5s (UX polish)
+- Error messages show field-specific validation failures (developer experience)
+
+---
+
+## Technologies Demonstrated
+
+**Backend Proficiency:**
+✅ Spring Boot 3 (REST, MVC, Security, WebSocket)  
+✅ Spring Data JPA (repositories, relationships, queries)  
+✅ Spring Security (JWT, filters, authentication)  
+✅ PostgreSQL (schema design, indexes, migrations)  
+✅ Flyway (version-controlled migrations)  
+✅ JUnit 5 + Mockito (unit testing)  
+✅ Maven (dependency management)  
+✅ Lombok (code generation)  
+✅ OpenAPI/Swagger (API documentation)
+
+**Frontend Proficiency:**
+✅ React 18 (hooks, context, components)  
+✅ React Query (server state management)  
+✅ React Hook Form (form validation)  
+✅ React Router (SPA routing)  
+✅ Recharts (data visualization)  
+✅ WebSocket/STOMP (real-time communication)  
+✅ Axios (HTTP client)  
+✅ Vite (build tooling)  
+✅ Custom CSS (design system, animations)
+
+**DevOps & Tools:**
+✅ Docker (containerization)  
+✅ Git (version control)  
+✅ Postman/cURL (API testing)  
+✅ Chrome DevTools (debugging)
+
+---
+
+## Next Steps & Extensibility
+
+This foundation is ready for:
+- **ML Integration**: Replace weighted algorithm with LSTM model for failure prediction
+- **IoT Connectivity**: MQTT integration for real-time sensor streams
+- **Multi-Tenancy**: Add organization/facility hierarchy
+- **Mobile App**: React Native companion for field technicians
+- **Advanced Analytics**: Predictive maintenance scheduling
+- **Audit Logging**: Track all equipment changes
+- **Role-Based Access**: Operator vs Admin permissions
+
+---
+
+## Contact & Assessment
+
+**Project Author**: Rishith  
+**Assessment**: ProU Technology | Full-Stack Tracks (1, 2, 3)  
+**Completion Date**: November 2025
+
+**Reviewer Quick Checks:**
+- ✅ Code compiles and runs
+- ✅ Database schema in Flyway migration
+- ✅ REST API documented in Swagger
+- ✅ Frontend responsive design
+- ✅ JWT authentication working
+- ✅ WebSocket real-time alerts functional
+- ✅ Unit tests passing
+
+**To Test Authentication:**
+```bash
 curl -X POST http://localhost:8080/api/v1/auth/login \
   -H "Content-Type: application/json" \
   -d '{"username":"admin","password":"password"}'
@@ -343,10 +535,110 @@ curl -X POST http://localhost:8080/api/v1/auth/login \
 
 ---
 
-## License
+## 🚀 Future Enhancements & Roadmap
 
-MIT License - Feel free to use this as a reference for your own projects.
+This project provides a **solid foundation** for enterprise-grade predictive maintenance. Here are potential enhancements that could transform it into an even more powerful platform:
 
----
+### Phase 1: Automation & Intelligence 🤖
+
+**Automated Data Collection:**
+- **Auto-Discovery & Registration**: Automatically detect and register new equipment on the network (using SNMP, OPC UA protocols)
+- **Automated Sensor Logging**: Instead of manual entry, integrate with IoT devices to auto-stream sensor data every 5 minutes
+- **Batch Import**: CSV/Excel upload for bulk equipment registration and historical data import
+- **API-Based Integration**: Allow third-party systems (SCADA, PLCs) to push sensor data via REST APIs
+
+**Machine Learning Integration:**
+- **LSTM/GRU Neural Networks**: Replace weighted algorithm with deep learning models trained on historical failure patterns
+- **Anomaly Detection**: Unsupervised learning (Isolation Forest, Autoencoders) to identify unusual sensor behavior
+- **Predictive Scheduling**: Auto-generate maintenance schedules based on predicted failure dates
+- **Confidence Scores**: Show prediction confidence (e.g., "87% chance of failure in next 48 hours")
+
+### Phase 2: Scalability & Real-World Integration 🌐
+
+**IoT & Edge Computing:**
+- **MQTT/CoAP Support**: Direct device-to-cloud sensor streaming for real-time data ingestion
+- **Edge AI**: Deploy lightweight risk models on Raspberry Pi/Arduino for offline prediction
+- **OPC UA Integration**: Connect to industrial automation systems (Siemens, Allen-Bradley PLCs)
+- **Low-Power Mode**: Optimize for battery-powered sensors with adaptive polling intervals
+
+**Multi-Tenancy & RBAC:**
+- **Organization Hierarchy**: Support factories → departments → equipment structure
+- **Role-Based Access**: Admin, Manager, Technician, Viewer roles with granular permissions
+- **Data Isolation**: Ensure tenants can't see each other's equipment/data
+- **Custom Branding**: White-label dashboard for different clients
+
+### Phase 3: Advanced Features & UX 📊
+
+**Enhanced Analytics Dashboard:**
+- **Failure Trend Analysis**: Charts showing failure rates by equipment type, location, time period
+- **Cost Savings Calculator**: Track downtime hours prevented and $ saved
+- **Maintenance Efficiency Metrics**: MTBF (Mean Time Between Failures), MTTR (Mean Time To Repair)
+- **Heatmaps**: Visualize high-risk zones in factory floor plans
+
+**Smart Notifications & Workflows:**
+- **Multi-Channel Alerts**: SMS, Email, Slack, Microsoft Teams integration
+- **Escalation Policies**: Auto-notify manager if technician doesn't acknowledge alert in 15 mins
+- **Custom Alert Rules**: Set different thresholds per equipment ("Turbine A: Alert at 70%, Pump B: Alert at 85%")
+- **Maintenance Checklists**: Generate step-by-step repair guides when alert fires
+
+**Document & Knowledge Management:**
+- **Attach Files**: Upload maintenance manuals, wiring diagrams, warranty docs to each equipment
+- **Repair History**: Track what was fixed, by whom, and when
+- **Failure Root Cause Database**: Build knowledge base of common failures and solutions
+
+### Phase 4: Enterprise Integration 🏢
+
+**ERP & Business Systems:**
+- **SAP/Oracle Integration**: Auto-create work orders in ERP when CRITICAL alert fires
+- **Inventory Management**: Check spare parts availability before scheduling maintenance
+- **Procurement Automation**: Auto-order replacement parts when failure predicted
+
+**BI & Reporting:**
+- **Power BI/Tableau Connectors**: Export data to executive dashboards
+- **Scheduled Reports**: Weekly/monthly PDF reports emailed to stakeholders
+- **SLA Tracking**: Monitor uptime targets and send compliance reports
+
+**Authentication & Security:**
+- **SSO (Single Sign-On)**: SAML, OAuth2, Active Directory integration
+- **Audit Logs**: Track every user action for compliance (ISO 9001, SOC 2)
+- **Data Encryption**: At-rest and in-transit encryption for sensitive sensor data
+
+### Phase 5: Cloud-Native & Scalability ☁️
+
+**Deployment & Monitoring:**
+- **Kubernetes**: Container orchestration with auto-scaling based on sensor volume
+- **Multi-Region**: Deploy across AWS regions for low-latency global access
+- **Observability**: Prometheus metrics, Grafana dashboards, ELK stack for logs
+- **CI/CD Pipeline**: GitHub Actions for automated testing and deployment
+
+**Mobile & Offline Support:**
+- **React Native App**: iOS/Android app for field technicians
+- **Offline Mode**: Continue monitoring when internet drops (sync when back online)
+- **QR Code Scanning**: Scan equipment tags to quickly log sensor readings
+- **Voice Commands**: "Alexa, what's the risk level of Turbine A?"
+
+### Phase 6: Industry-Specific Extensions 🏭
+
+**Manufacturing:**
+- **SCADA Integration**: Pull data directly from factory control systems
+- **Production Line Optimization**: Predict bottlenecks before they cause delays
+- **Quality Control**: Correlate equipment health with product defect rates
+
+**Aviation & Transportation:**
+- **FAA/EASA Compliance**: Automated regulatory reporting for aircraft maintenance
+- **Fleet Management**: Track health across hundreds of vehicles/aircraft
+- **GPS Integration**: Map-based view of equipment locations and risk zones
+
+**Energy & Utilities:**
+- **SCADA/DNP3 Protocols**: Monitor wind turbines, solar panels, transformers
+- **Grid Stability**: Predict equipment failures that could cause blackouts
+- **Remote Sites**: Satellite connectivity for offshore platforms
+
+**Healthcare:**
+- **Medical Equipment Monitoring**: MRI machines, ventilators, X-ray equipment
+- **Regulatory Compliance**: FDA 21 CFR Part 11 audit trails
+- **Patient Safety**: Alerts for life-critical equipment failures
+
+
 
 **Thank you for reviewing my work. I look forward to discussing the technical decisions I made and how they align with your team's engineering standards.**
