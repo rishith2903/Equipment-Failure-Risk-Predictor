@@ -1,20 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 import { equipmentAPI } from '../api/equipmentAPI';
 import './AddSensorLog.css';
 
 const AddSensorLog = () => {
     const [searchParams] = useSearchParams();
     const [equipmentList, setEquipmentList] = useState([]);
-    const [formData, setFormData] = useState({
-        equipmentId: searchParams.get('equipmentId') || '',
-        temperature: '',
-        vibration: '',
-        loadPercentage: '',
-    });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        setValue
+    } = useForm({
+        defaultValues: {
+            equipmentId: searchParams.get('equipmentId') || '',
+            temperature: '',
+            vibration: '',
+            loadPercentage: '',
+        }
+    });
 
     useEffect(() => {
         fetchEquipment();
@@ -29,17 +38,12 @@ const AddSensorLog = () => {
         }
     };
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const onSubmit = async (data) => {
         setError('');
         setLoading(true);
 
         try {
-            const { equipmentId, ...logData } = formData;
+            const { equipmentId, ...logData } = data;
             await equipmentAPI.addLog(equipmentId, {
                 temperature: parseFloat(logData.temperature),
                 vibration: parseFloat(logData.vibration),
@@ -67,15 +71,14 @@ const AddSensorLog = () => {
             <div className="form-container card">
                 {error && <div className="alert alert-error">{error}</div>}
 
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="form-group">
                         <label className="label">⚙️ Select Equipment *</label>
                         <select
-                            name="equipmentId"
-                            className="input"
-                            value={formData.equipmentId}
-                            onChange={handleChange}
-                            required
+                            {...register('equipmentId', {
+                                required: 'Please select an equipment'
+                            })}
+                            className={`input ${errors.equipmentId ? 'input-error' : ''}`}
                         >
                             <option value="">Choose equipment...</option>
                             {equipmentList.map(eq => (
@@ -84,57 +87,93 @@ const AddSensorLog = () => {
                                 </option>
                             ))}
                         </select>
+                        {errors.equipmentId && (
+                            <span className="error-message">{errors.equipmentId.message}</span>
+                        )}
                     </div>
 
                     <div className="form-group">
                         <label className="label">🌡️ Temperature (°C) *</label>
                         <input
                             type="number"
-                            name="temperature"
-                            className="input"
+                            {...register('temperature', {
+                                required: 'Temperature is required',
+                                min: {
+                                    value: -50,
+                                    message: 'Temperature must be at least -50°C'
+                                },
+                                max: {
+                                    value: 200,
+                                    message: 'Temperature cannot exceed 200°C'
+                                },
+                                valueAsNumber: true
+                            })}
+                            className={`input ${errors.temperature ? 'input-error' : ''}`}
                             placeholder="0 - 200"
                             step="0.01"
-                            min="-50"
-                            max="200"
-                            value={formData.temperature}
-                            onChange={handleChange}
-                            required
                         />
-                        <small className="text-muted text-sm">Normal range: 0-150°C</small>
+                        {errors.temperature && (
+                            <span className="error-message">{errors.temperature.message}</span>
+                        )}
+                        {!errors.temperature && (
+                            <small className="text-muted text-sm">Normal range: 0-150°C</small>
+                        )}
                     </div>
 
                     <div className="form-group">
                         <label className="label">〰️ Vibration (mm/s) *</label>
                         <input
                             type="number"
-                            name="vibration"
-                            className="input"
+                            {...register('vibration', {
+                                required: 'Vibration is required',
+                                min: {
+                                    value: 0,
+                                    message: 'Vibration must be at least 0 mm/s'
+                                },
+                                max: {
+                                    value: 100,
+                                    message: 'Vibration cannot exceed 100 mm/s'
+                                },
+                                valueAsNumber: true
+                            })}
+                            className={`input ${errors.vibration ? 'input-error' : ''}`}
                             placeholder="0 - 100"
                             step="0.01"
-                            min="0"
-                            max="100"
-                            value={formData.vibration}
-                            onChange={handleChange}
-                            required
                         />
-                        <small className="text-muted text-sm">Normal range: 0-50 mm/s</small>
+                        {errors.vibration && (
+                            <span className="error-message">{errors.vibration.message}</span>
+                        )}
+                        {!errors.vibration && (
+                            <small className="text-muted text-sm">Normal range: 0-50 mm/s</small>
+                        )}
                     </div>
 
                     <div className="form-group">
                         <label className="label">⚡ Load Percentage (%) *</label>
                         <input
                             type="number"
-                            name="loadPercentage"
-                            className="input"
+                            {...register('loadPercentage', {
+                                required: 'Load percentage is required',
+                                min: {
+                                    value: 0,
+                                    message: 'Load must be at least 0%'
+                                },
+                                max: {
+                                    value: 100,
+                                    message: 'Load cannot exceed 100%'
+                                },
+                                valueAsNumber: true
+                            })}
+                            className={`input ${errors.loadPercentage ? 'input-error' : ''}`}
                             placeholder="0 - 100"
                             step="0.01"
-                            min="0"
-                            max="100"
-                            value={formData.loadPercentage}
-                            onChange={handleChange}
-                            required
                         />
-                        <small className="text-muted text-sm">Current operational load</small>
+                        {errors.loadPercentage && (
+                            <span className="error-message">{errors.loadPercentage.message}</span>
+                        )}
+                        {!errors.loadPercentage && (
+                            <small className="text-muted text-sm">Current operational load</small>
+                        )}
                     </div>
 
                     <div className="form-actions">

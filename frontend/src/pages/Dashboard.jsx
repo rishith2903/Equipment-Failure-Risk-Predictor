@@ -1,59 +1,83 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { equipmentAPI, riskAPI } from '../api/equipmentAPI';
+import { useDashboardData } from '../hooks/useDashboardData';
+import { useWebSocket } from '../hooks/useWebSocket';
 import StatsCard from '../components/dashboard/StatsCard';
 import EquipmentCard from '../components/equipment/EquipmentCard';
 import RecentAlerts from '../components/dashboard/RecentAlerts';
 import './Dashboard.css';
 
 const Dashboard = () => {
-    const [stats, setStats] = useState(null);
-    const [equipmentList, setEquipmentList] = useState([]);
-    const [riskDataMap, setRiskDataMap] = useState({});
-    const [alerts, setAlerts] = useState([]);
-    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
+    const { stats, equipmentList, riskDataMap, alerts, isLoading, error } = useDashboardData();
+    const { messages: wsAlerts, isConnected } = useWebSocket('/topic/alerts');
+    const [realtimeAlerts, setRealtimeAlerts] = useState([]);
 
+    // Handle real-time WebSocket alerts
     useEffect(() => {
-        fetchDashboardData();
-    }, []);
+        if (wsAlerts.length > 0) {
+            const latestAlert = wsAlerts[wsAlerts.length - 1];
 
-    const fetchDashboardData = async () => {
-        try {
-            // Fetch dashboard stats
-            const statsRes = await riskAPI.getDashboardStats();
-            setStats(statsRes.data);
+            // Show toast notification
+            showToast(latestAlert);
 
-            // Fetch equipment
-            const equipRes = await equipmentAPI.getAll();
-            setEquipmentList(equipRes.data);
-
-            // Fetch risk data for each equipment
-            const riskPromises = equipRes.data.map(eq =>
-                riskAPI.getLatest(eq.id)
-                    .then(res => ({ id: eq.id, data: res.data }))
-                    .catch(() => ({ id: eq.id, data: null }))
-            );
-            const riskResults = await Promise.all(riskPromises);
-            const riskMap = {};
-            riskResults.forEach(r => {
-                if (r.data) riskMap[r.id] = r.data;
-            });
-            setRiskDataMap(riskMap);
-
-            // Fetch recent alerts
-            const alertsRes = await riskAPI.getAlerts({ limit: 10 });
-            setAlerts(alertsRes.data);
-
-            setLoading(false);
-        } catch (err) {
-            console.error('Error fetching dashboard data:', err);
-            setLoading(false);
+            // Add to realtime alerts list
+            setRealtimeAlerts((prev) => [latestAlert, ...prev].slice(0, 5));
         }
+    }, [wsAlerts]);
+
+    const showToast = (alert) => {
+        const riskColor = alert.riskLevel === 'CRITICAL' ? '#dc2626' : '#f59e0b';
+        const emoji = alert.riskLevel === 'CRITICAL' ? '🚨' : '⚠️';
+
+        // Create toast element
+        const toast = document.createElement('div');
+        toast.innerHTML = `
+            <div style="
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${riskColor};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                z-index: 9999;
+                animation: slideIn 0.3s ease-out;
+                max-width: 400px;
+            ">
+                <div style="font-weight: bold; margin-bottom: 0.25rem;">
+                    ${emoji} ${alert.riskLevel} Risk Alert!
+                </div>
+                <div style="font-size: 0.9rem;">
+                    ${alert.equipmentName}: ${alert.reason}
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(toast);
+
+        // Remove after 5 seconds
+        setTimeout(() => {
+            toast.style.animation = 'slideOut 0.3s ease-in';
+            setTimeout(() => toast.remove(), 300);
+        }, 5000);
     };
 
-    if (loading) {
+    if (isLoading) {
         return <div className="page-loading"><div className="spinner"></div></div>;
+    }
+
+    if (error) {
+        return (
+            <div className="page-error">
+                <h2>Error loading dashboard</h2>
+                <p>{error.message || 'An unexpected error occurred'}</p>
+                <button className="btn btn-primary" onClick={() => window.location.reload()}>
+                    Retry
+                </button>
+            </div>
+        );
     }
 
     return (

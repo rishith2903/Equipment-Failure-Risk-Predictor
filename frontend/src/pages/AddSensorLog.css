@@ -13,3 +13,15 @@
     justify-content: flex-end;
     margin-top: var(--spacing-xl);
 }
+
+.input-error {
+    border-color: var(--color-critical) !important;
+}
+
+.error-message {
+    display: block;
+    margin-top: var(--spacing-xs);
+    color: var(--color-critical);
+    font-size: 0.875rem;
+    font-weight: 500;
+}

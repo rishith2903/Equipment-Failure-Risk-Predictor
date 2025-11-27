@@ -142,7 +142,7 @@ h3 {
 }
 
 .btn-secondary:hover {
-    background: var(--color-surface);
+    background: var(--color-sur face);
 }
 
 /* Forms */
@@ -293,6 +293,31 @@ textarea.input {
     background: rgba(228, 228, 231, 0.1);
     color: var(--color-primary);
     border: 1px solid var(--color-primary);
+}
+
+/* Toast Notifications */
+@keyframes slideIn {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateX(400px);
+        opacity: 0;
+    }
 }
 
 /* Responsive */
